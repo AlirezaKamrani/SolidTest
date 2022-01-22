@@ -374,6 +374,7 @@ contract DFGlobalEscrow is Ownable {
                 redeemCEth(_amount, true, e.cTokenAddress);
             }
 
+            // Using this pattern to transfer ETH for more security
             (bool success, bytes memory data) = e.owner.call{value: _amount}(
                 ""
             );
@@ -386,32 +387,13 @@ contract DFGlobalEscrow is Ownable {
         } else {
             redeemCErc20Tokens(_amount, true, e.cTokenAddress);
 
+            // Using safe Transfer method
             safeTransfer(e.tokenAddress, escrowOwner, _amount);
 
             // IERC20 erc20Instance = IERC20(e.tokenAddress);
             // require(erc20Instance.transfer(escrowOwner, _amount));
         }
     }
-
-    // function supplyEthToCompound(address payable _cEtherContract)
-    //     public
-    //     payable
-    //     returns (bool)
-    // {
-    //     // Create a reference to the corresponding cToken contract
-    //     CEth cToken = CEth(_cEtherContract);
-
-    //     // Amount of current exchange rate from cToken to underlying
-    //     uint256 exchangeRateMantissa = cToken.exchangeRateCurrent();
-    //     emit MyLog("Exchange Rate (scaled up by 1e18): ", exchangeRateMantissa);
-
-    //     // Amount added to you supply balance this block
-    //     uint256 supplyRateMantissa = cToken.supplyRatePerBlock();
-    //     emit MyLog("Supply Rate: (scaled up by 1e18)", supplyRateMantissa);
-
-    //     cToken.mint{value: msg.value, gas: 250000}();
-    //     return true;
-    // }
 
     function supplyErc20ToCompound(
         address _erc20Contract,
